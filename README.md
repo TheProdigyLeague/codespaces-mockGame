@@ -1,60 +1,61 @@
-# MMORPG Lobby Simulation
+# Mock Game Modal Server
 
-## Overview
-This project simulates an addictive MMORPG lobby, featuring server selection, ASCII character names, loot boxes, a never-ending battle pass, and aggressive microtransactions. Upon entering the game, users will be greeted with a company logo display.
+Welcome to the Mock Game Modal Server project! This project simulates an addictive MMORPG lobby featuring loot boxes and aggressive monetization practices. Below you will find instructions on how to set up and use the application, along with details about the technologies used.
 
-## Features
-- **Server Selection**: Users can choose from a list of available servers to join the game.
-- **ASCII Character Names**: Players can generate unique ASCII character names with validation.
-- **Loot Boxes**: Simulate loot box mechanics, allowing players to open boxes and receive random items.
-- **Never-Ending Battle Pass**: Manage user progression through a continuous battle pass system with rewards.
-- **Aggressive Microtransactions**: Implement in-game purchases to enhance the gaming experience.
-- **Company Logo Display**: Show the company logo upon entering the game, complete with animation.
+## Table of Contents
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Running the Application](#running-the-application)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
 
-## Project Structure
-```
-mmorpg-lobby-sim
-├── src
-│   ├── index.ts
-│   ├── lobby
-│   │   ├── serverSelection.ts
-│   │   ├── characterNames.ts
-│   │   ├── logoDisplay.ts
-│   ├── features
-│   │   ├── lootBoxes.ts
-│   │   ├── battlePass.ts
-│   │   └── microtransactions.ts
-│   └── types
-│       └── index.ts
-├── package.json
-├── tsconfig.json
-└── README.md
-```
+## Technologies Used
 
-## Setup Instructions
+- ![npm logo](https://upload.wikimedia.org/wikipedia/commons/d/db/Npm-logo.svg) **npm**: A package manager for JavaScript that allows you to install and manage dependencies.
+- ![Live Server logo](https://raw.githubusercontent.com/tapio/live-server/master/src/images/logo.png) **Live Server**: A development server with live reload capability for static and dynamic pages.
+- ![HTML logo](https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg) **HTML**: The standard markup language for creating web pages.
+- ![CSS logo](https://upload.wikimedia.org/wikipedia/commons/6/62/CSS3_logo_and_wordmark.svg) **CSS**: A style sheet language used for describing the presentation of a document written in HTML.
+- ![JavaScript logo](https://upload.wikimedia.org/wikipedia/commons/6/6c/JavaScript-logo.png) **JavaScript**: A programming language that enables interactive web pages.
+- ![TypeScript logo](https://upload.wikimedia.org/wikipedia/commons/4/4c/TypeScript_logo_2020.svg) **TypeScript**: A superset of JavaScript that adds static types, enhancing code quality and maintainability.
+
+## Installation
+
 1. Clone the repository:
    ```
-   git clone <repository-url>
+   git clone https://github.com/yourusername/mock-game-modal-server.git
    ```
+
 2. Navigate to the project directory:
    ```
-   cd mmorpg-lobby-sim
+   cd mock-game-modal-server
    ```
-3. Install dependencies:
+
+3. Install the dependencies using npm:
    ```
    npm install
    ```
-4. Compile the TypeScript files:
-   ```
-   npm run build
-   ```
-5. Start the simulation:
-   ```
-   npm start
-   ```
+
+## Running the Application
+
+To run the application, you can use the Live Server extension in your code editor or run the following command to start the server:
+
+```
+npm start
+```
+
+This will launch the mock-game modal server, and you can access it in your web browser at `http://localhost:3000`.
+
+## Project Structure
+
+- **src/app.ts**: Main entry point of the application, setting up the server and handling routing.
+- **src/types/index.ts**: TypeScript interfaces and types for better code organization.
+- **package.json**: Metadata about the project, including dependencies and scripts.
+- **tsconfig.json**: TypeScript configuration file.
 
 ## Contributing
-Contributions are welcome! Please submit a pull request or open an issue for any suggestions or improvements.
 
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+Contributions are welcome! If you have suggestions for improvements or new features, feel free to open an issue or submit a pull request.
+
+---
+
+This README provides a comprehensive overview of the Mock Game Modal Server project. Happy coding!
