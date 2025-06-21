@@ -1,0 +1,29 @@
+{
+  "name": "mmorpg-lobby-sim",
+  "version": "1.0.0",
+  "description": "A simulation of an addictive MMORPG lobby with features like server selection, ASCII character names, loot boxes, a never-ending battle pass, and aggressive microtransactions.",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "ts-node": "^10.0.0",
+    "typescript": "^4.0.0",
+    "jest": "^27.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.0",
+    "@types/node": "^16.0.0"
+  },
+  "keywords": [
+    "mmorpg",
+    "simulation",
+    "lobby",
+    "game",
+    "typescript"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awesome Game - Download Now!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a; /* Dark background */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+        .background-blur {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://placehold.co/1920x1080/1a202c/ffffff?text=Cool+Concept+Art'); /* Placeholder, user will replace */
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px);
+            z-index: -1;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .modal-content {
+            background-color: #1e293b; /* Darker blue-gray */
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: 90%;
+            width: 600px;
+            color: #e2e8f0; /* Light gray text */
+            animation: fadeInScale 0.5s ease-out;
+        }
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .download-progress-bar {
+            width: 0%;
+            height: 10px;
+            background-color: #10b981; /* Green for progress */
+            border-radius: 5px;
+            transition: width 0.1s linear;
+        }
+        .fade-out {
+            opacity: 0 !important;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen text-gray-100">
+    <!-- Background with blur -->
+    <div class="background-blur"></div>
+
+    <!-- Main Content Wrapper -->
+    <div class="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
+        <!-- Main Modal Content (visible initially) -->
+        <div id="main-modal" class="bg-gradient-to-br from-blue-900 to-indigo-900 p-8 sm:p-10 rounded-2xl shadow-2xl max-w-4xl w-full text-center transform transition-transform duration-500 hover:scale-105">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-6 leading-tight">
+                Experience the Next Frontier of MMORPGs!
+            </h1>
+            <p class="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
+                Embark on an epic journey. Collect legendary loot, conquer dungeons, and forge your destiny in a vast open world.
+            </p>
+
+            <!-- Download Button -->
+            <button id="download-button" class="bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white font-bold py-4 px-10 rounded-full text-xl sm:text-2xl shadow-lg transform transition-all duration-300 ease-out hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-orange-300">
+                Download Free Game Now!
+            </button>
+
+            <!-- Mock Blog/Patch Updates Section -->
+            <div class="mt-12 text-left">
+                <h2 class="text-3xl font-bold text-white mb-6">Latest Dev Updates & Patch Notes</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Update 1 -->
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-md transition-transform duration-300 hover:scale-[1.02]">
+                        <h3 class="text-xl font-semibold text-teal-400 mb-2">Patch 1.2.0: The Ancient Awakening</h3>
+                        <p class="text-gray-300 text-sm">
+                            New high-level zone unlocked: Whispering Caverns. Introducing raid boss 'Kronos, the Time Weaver' and balance adjustments for all classes. Performance optimizations across the board!
+                        </p>
+                        <p class="text-xs text-gray-500 mt-3">May 15, 2025</p>
+                    </div>
+                    <!-- Update 2 -->
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-md transition-transform duration-300 hover:scale-[1.02]">
+                        <h3 class="text-xl font-semibold text-teal-400 mb-2">Community Spotlight & Upcoming Events</h3>
+                        <p class="text-gray-300 text-sm">
+                            Check out the top community builds and strategies! Get ready for the 'Summer Solstice Scramble' event, featuring unique cosmetic rewards and bonus XP weekends.
+                        </p>
+                        <p class="text-xs text-gray-500 mt-3">May 10, 2025</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden Download Modal -->
+        <div id="download-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <h2 class="text-3xl font-bold text-white mb-6">Downloading Your Game...</h2>
+                <p id="download-status" class="text-gray-300 mb-4">Initializing download...</p>
+                <div class="w-full bg-gray-700 rounded-full h-3 mb-6 overflow-hidden">
+                    <div id="download-progress-bar" class="download-progress-bar"></div>
+                </div>
+                <p class="text-gray-400 text-sm">Please wait, your epic adventure is loading!</p>
+            </div>
+        </div>
+
+        <!-- Hidden Corporate Logo Modal -->
+        <div id="corporate-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <h2 class="text-3xl font-bold text-white mb-6">Powered by:</h2>
+                <!-- Placeholder for corporate-logo-studios.gif -->
+                <img src="https://placehold.co/300x150/0f172a/60a5fa?text=Corporate+Logo+Studios" alt="Corporate Logo Studios" class="mx-auto my-6 rounded-lg shadow-xl" style="max-width: 80%; height: auto;">
+                <p class="text-gray-300 mb-4">Prepare for an immersive experience!</p>
+                <button id="launch-app-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transform transition-all duration-300 ease-out hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                    Launch Android Game Simulation
+                </button>
+            </div>
+        </div>
+
+        <!-- MMORPG Lobby Modal (hidden by default) -->
+        <div id="lobby-modal" class="modal-overlay hidden">
+            <div class="modal-content max-w-2xl">
+                <h2 class="text-3xl font-bold text-yellow-400 mb-4">MMORPG Lobby</h2>
+                <p class="mb-4 text-gray-300">Pick a server to join:</p>
+                <div id="server-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6"></div>
+                <div id="lobby-content" class="hidden">
+                    <h3 class="text-2xl font-bold text-teal-300 mb-2">Welcome to <span id="server-name"></span>!</h3>
+                    <p class="mb-4 text-gray-400">Lobby Population: <span id="lobby-pop"></span> (99% bots)</p>
+                    <div class="mb-6">
+                        <span class="inline-block bg-pink-700 text-white px-3 py-1 rounded-full text-xs font-bold mr-2">Battle Pass: Infinite Tiers!</span>
+                        <span class="inline-block bg-purple-700 text-white px-3 py-1 rounded-full text-xs font-bold mr-2">Loot Boxes: <span id="loot-count">0</span></span>
+                        <span class="inline-block bg-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold">Microtransactions: Aggressive!</span>
+                    </div>
+                    <div class="mb-4">
+                        <button id="open-loot" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-full mr-2">Open Loot Box</button>
+                        <button id="buy-battlepass" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-full mr-2">Buy Battle Pass</button>
+                        <button id="buy-gems" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full">Buy Gems</button>
+                    </div>
+                    <div class="mb-4">
+                        <h4 class="text-lg font-semibold text-gray-200 mb-2">Lobby Chat (ProPvP Bots):</h4>
+                        <div id="bot-chat" class="bg-gray-800 rounded-lg p-3 h-32 overflow-y-auto text-xs text-green-300 font-mono"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 text-xs py-6 mt-auto">
+        <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
+            <!-- Tiny Grey Text Section -->
+            <div class="text-center sm:text-left mb-4 sm:mb-0">
+                <p class="text-gray-500">&copy; 2025 Awesome Game Studios. All rights reserved.</p>
+                <p class="mt-2">
+                    <a href="#" class="text-gray-500 hover:text-gray-300 mr-4">Terms of Service</a>
+                    <a href="#" class="text-gray-500 hover:text-gray-300 mr-4">Privacy Policy</a>
+                    <a href="#" class="text-gray-500 hover:text-gray-300">Terms & Conditions</a>
+                </p>
+            </div>
+
+            <!-- Social Media Logos -->
+            <div class="flex space-x-4">
+                <a href="#" class="hover:text-white transform transition-transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M22.2 6.5C21.4 7.6 19.9 8.7 18 9.5c.3-.2.6-.4.9-.7a2.1 2.1 0 00.3-2.6c-.1-.2-.3-.4-.5-.6-.2-.2-.5-.3-.7-.3-.4 0-.8.1-1.1.3-.3.2-.5.4-.7.7-.3.2-.5.5-.6.8-.1.3-.2.6-.2.9v.3a1.5 1.5 0 00.5 1.1c.3.3.6.5.9.6.3.1.6.2.9.2.2 0 .4 0 .6-.1l.6-.2c-.1.3-.3.6-.5.9-.2.3-.4.5-.7.7-.3.2-.6.3-.9.3h-.1a.9.9 0 01-.6-.2c-.3-.2-.5-.4-.7-.7-.2-.3-.3-.6-.3-.9-.1-.3-.1-.6-.1-.9v-.3c0-.3 0-.6.1-.9.1-.3.2-.5.4-.7.2-.2.4-.4.7-.6.3-.2.6-.3.9-.3.3 0 .6.1.9.2.3.1.5.3.7.5.2.2.4.4.5.6.1.2.2.5.2.7h.1c0 .2-.1.4-.2.6-.1.2-.2.3-.4.4-.2.1-.4.2-.6.2-.2 0-.4 0-.6-.1l-.6-.2a.9.9 0 01-.6-.2c-.3-.2-.5-.4-.7-.7-.2-.3-.3-.6-.3-.9-.1-.3-.1-.6-.1-.9V6.5c0-.3 0-.6.1-.9.1-.3.2-.5.4-.7.2-.2.4-.4.7-.6.3-.2.6-.3.9-.3.3 0 .6.1.9.2.3.1.5.3.7.5.2.2.4.4.5.6.1.2.2.5.2.7h.1c0 .2-.1.4-.2.6-.1.2-.2.3-.4.4-.2.1-.4.2-.6.2-.2 0-.4 0-.6-.1L18 9.5c.3-.2.6-.4.9-.7a2.1 2.1 0 00.3-2.6c-.1-.2-.3-.4-.5-.6-.2-.2-.5-.3-.7-.3-.4 0-.8.1-1.1.3-.3.2-.5.4-.7.7-.3.2-.5.5-.6.8-.1.3-.2.6-.2.9v.3a1.5 1.5 0 00.5 1.1c.3.3.6.5.9.6.3.1.6.2.9.2.2 0 .4 0 .6-.1l.6-.2c-.1.3-.3.6-.5.9-.2.3-.4.5-.7.7-.3.2-.6.3-.9.3h-.1a.9.9 0 01-.6-.2c-.3-.2-.5-.4-.7-.7-.2-.3-.3-.6-.3-.9-.1-.3-.1-.6-.1-.9V6.5c0-.3 0-.6.1-.9.1-.3.2-.5.4-.7.2-.2.4-.4.7-.6.3-.2.6-.3.9-.3.3 0 .6.1.9.2.3.1.5.3.7.5.2.2.4.4.5.6.1.2.2.5.2.7h.1c0 .2-.1.4-.2.6-.1.2-.2.3-.4.4-.2.1-.4.2-.6.2-.2 0-.4 0-.6-.1L18 9.5c.3-.2.6-.4.9-.7a2.1 2.1 0 00.3-2.6c-.1-.2-.3-.4-.5-.6-.2-.2-.5-.3-.7-.3-.4 0-.8.1-1.1.3-.3.2-.5.4-.7.7-.3.2-.5.5-.6.8-.1.3-.2.6-.2.9v.3a1.5 1.5 0 00.5 1.1c.3.3.6.5.9.6.3.1.6.2.9.2.2 0 .4 0 .6-.1l.6-.2c-.1.3-.3.6-.5.9-.2.3-.4.5-.7.7-.3.2-.6.3-.9.3h-.1a.9.9 0 01-.6-.2c-.3-.2-.5-.4-.7-.7-.2-.3-.3-.6-.3-.9-.1-.3-.1-.6-.1-.9V6.5c0-.3 0-.6.1-.9.1-.3.2-.5.4-.7.2-.2.4-.4.7-.6.3-.2.6-.3.9-.3.3 0 .6.1.9.2.3.1.5.3.7.5.2.2.4.4.5.6.1.2.2.5.2.7h.1c0 .2-.1.4-.2.6-.1.2-.2.3-.4.4-.2.1-.4.2-.6.2-.2 0-.4 0-.6-.1l-.6-.2z"></path>
+                        <path fill-rule="evenodd" d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.66 8.35c.1-.1.2-.2.2-.3s0-.2-.1-.3c-.1-.1-.2-.1-.3-.1-.1 0-.2.1-.2.2s0 .2.1.3c.1.1.2.1.3.1zm-4.7 0c.1-.1.2-.2.2-.3s0-.2-.1-.3c-.1-.1-.2-.1-.3-.1-.1 0-.2.1-.2.2s0 .2.1.3c.1.1.2.1.3.1zm-4.7 0c.1-.1.2-.2.2-.3s0-.2-.1-.3c-.1-.1-.2-.1-.3-.1-.1 0-.2.1-.2.2s0 .2.1.3c.1.1.2.1.3.1z" clip-rule="evenodd"></path>
+                        <path d="M17.65 14.34c0 .3-.1.6-.3.8-.2.2-.5.3-.8.3h-.1c-.3 0-.6-.1-.8-.3-.2-.2-.3-.5-.3-.8V12c0-.3.1-.6.3-.8.2-.2.5-.3.8-.3h.1c.3 0 .6.1.8.3.2.2.3.5.3.8v2.34zm-4.7 0c0 .3-.1.6-.3.8-.2.2-.5.3-.8.3h-.1c-.3 0-.6-.1-.8-.3-.2-.2-.3-.5-.3-.8V12c0-.3.1-.6.3-.8.2-.2.5-.3.8-.3h.1c.3 0 .6.1.8.3.2.2.3.5.3.8v2.34zm-4.7 0c0 .3-.1.6-.3.8-.2.2-.5.3-.8.3h-.1c-.3 0-.6-.1-.8-.3-.2-.2-.3-.5-.3-.8V12c0-.3.1-.6.3-.8.2-.2.5-.3.8-.3h.1c.3 0 .6.1.8.3.2.2.3.5.3.8v2.34z"></path>
+                        <path d="M12 21.6c-5.373 0-9.72-4.347-9.72-9.72s4.347-9.72 9.72-9.72 9.72 4.347 9.72 9.72-4.347 9.72-9.72 9.72zm0-18.45c-4.823 0-8.73 3.907-8.73 8.73s3.907 8.73 8.73 8.73 8.73-3.907 8.73-8.73-3.907-8.73-8.73-8.73z"></path>
+                    </svg>
+                </a>
+                <a href="#" class="hover:text-white transform transition-transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.505 1.492-3.89 3.776-3.89 1.094 0 2.24.195 2.24.195v2.455H14.23c-1.222 0-1.6.75-1.6 1.44v1.81h2.89l-.447 2.89h-2.443v6.987C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
+                    </svg>
+                </a>
+                <a href="#" class="hover:text-white transform transition-transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M19.812 5.05c.313-.153.642-.277.98-.372C21.12 4.373 22 4.25 22 4.25v15.5c0 .05-.01.1-.03.14-.02.04-.05.08-.09.11-.04.03-.08.05-.13.06-.05.01-.1.01-.15 0-1.04-.08-2.08-.2-3.11-.36-1.03-.16-2.07-.37-3.1-.64-1.03-.27-2.06-.57-3.08-.91-1.02-.34-2.04-.7-3.06-1.1s-2.02-.85-3.03-1.34c-1.01-.48-2.01-.99-3-1.53-.99-.54-1.95-1.12-2.88-1.76C3.25 9.49 2.5 8.75 2.5 8.75V4.25s.88.12 2.19.47c.33.1.66.22.98.37 1.25.6 2.5.9 3.75 1.15 1.25.25 2.5.4 3.75.45 1.25.05 2.5-.05 3.75-.3 1.25-.25 2.5-.6 3.75-1.05z" clip-rule="evenodd"></path>
+                    </svg>
+                </a>
+                <a href="#" class="hover:text-white transform transition-transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M18.293 2.293a1 1 0 011.414 0l2 2a1 1 0 010 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414l2-2zm-12 0a1 1 0 011.414 0l2 2a1 1 0 010 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414l2-2zM12 4a8 8 0 100 16 8 8 0 000-16zM6 12a6 6 0 1112 0 6 6 0 01-12 0zm0 2a4 4 0 100 8 4 4 0 000-8zm0 2a2 2 0 100 4 2 2 0 000-4z"></path>
+                    </svg>
+                </a>
+                <a href="#" class="hover:text-white transform transition-transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.237 3.09 7.737 7.154 8.761L9 21h6l.092-.007C18.91 19.737 22 16.237 22 12c0-5.523-4.477-10-10-10zm-3 10c0 .552.448 1 1 1h4c.552 0 1-.448 1-1v-4c0-.552-.448-1-1-1H10c-.552 0-1 .448-1 1v4z" clip-rule="evenodd"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const downloadButton = document.getElementById('download-button');
+        const mainModal = document.getElementById('main-modal');
+        const downloadModal = document.getElementById('download-modal');
+        const corporateModal = document.getElementById('corporate-modal');
+        const downloadProgressBar = document.getElementById('download-progress-bar');
+        const downloadStatus = document.getElementById('download-status');
+        const launchAppButton = document.getElementById('launch-app-button');
+
+        downloadButton.addEventListener('click', () => {
+            // Hide main modal and show download modal
+            mainModal.classList.add('fade-out');
+            setTimeout(() => {
+                mainModal.classList.add('hidden');
+                downloadModal.classList.remove('hidden');
+                downloadModal.classList.add('modal-overlay'); // Ensure it's visible
+                startMockDownload();
+            }, 500); // Wait for fade-out animation
+        });
+
+        // --- MMORPG Lobby Simulation ---
+        const servers = [
+            { name: "Server 1: ☠️𝕬𝖉𝖒𝖎𝖓_𝕳𝖆𝖈𝖊𝖉☠️", pop: 1200 },
+            { name: "Server 2: ★彡[ᴘʀᴏᴘᴠᴘ_ʙᴏᴛɴᴇᴛ]彡★", pop: 980 },
+            { name: "Server 3: 𝓦𝓲𝓵𝓭𝓡𝓲𝓯𝓽_𝓧𝓣𝓡𝓔𝓜𝓔", pop: 1500 },
+            { name: "Server 4: Rune$cape💎Dupers", pop: 666 },
+        ];
+
+        const botNames = [
+            "xX_DarkSlayer_Xx", "ProPvP_Bot42", "WildRiftGod", "RuneScape1337", "DelafordAI", "DiabloImmortalPay2Win", "PvP_Legend", "BotNetMaster", "LootBoxKing", "BattlePassGrinder"
+        ];
+
+        const botMessages = [
+            "Anyone want to duel? (Lvl 999)",
+            "Just got 3 legendaries from loot boxes!",
+            "Battle pass tier 9999, let's go!",
+            "Microtransactions are the best way to win.",
+            "Looking for group for infinite dungeon.",
+            "Who needs gems? Buy now!",
+            "Admin here, server is totally not hacked.",
+            "Pay2Win is the only way.",
+            "Just spent $100, worth it!",
+            "Anyone else stuck in the battle pass loop?"
+        ];
+
+        let selectedServer = null;
+        let lootCount = 0;
+        let botChatInterval = null;
+
+        function showLobbyModal() {
+            document.getElementById('lobby-modal').classList.remove('hidden');
+            document.getElementById('lobby-modal').classList.add('modal-overlay');
+            const serverList = document.getElementById('server-list');
+            serverList.innerHTML = '';
+            servers.forEach((server, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "bg-gray-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full mb-2 transition-all";
+                btn.textContent = server.name;
+                btn.onclick = () => selectServer(idx);
+                serverList.appendChild(btn);
+            });
+            document.getElementById('lobby-content').classList.add('hidden');
+            serverList.classList.remove('hidden');
+        }
+
+        function selectServer(idx) {
+            selectedServer = servers[idx];
+            document.getElementById('server-name').textContent = selectedServer.name;
+            document.getElementById('lobby-pop').textContent = selectedServer.pop;
+            document.getElementById('lobby-content').classList.remove('hidden');
+            document.getElementById('server-list').classList.add('hidden');
+            startBotChat();
+        }
+
+        function startBotChat() {
+            const chat = document.getElementById('bot-chat');
+            chat.innerHTML = '';
+            if (botChatInterval) clearInterval(botChatInterval);
+            let msgIdx = 0;
+            botChatInterval = setInterval(() => {
+                const name = botNames[Math.floor(Math.random() * botNames.length)];
+                const msg = botMessages[Math.floor(Math.random() * botMessages.length)];
+                const line = document.createElement('div');
+                line.textContent = `[${name}]: ${msg}`;
+                chat.appendChild(line);
+                chat.scrollTop = chat.scrollHeight;
+                msgIdx++;
+                if (msgIdx > 50) chat.innerHTML = '';
+            }, 1200);
+        }
+
+        // Loot box, battle pass, microtransaction buttons
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('open-loot').onclick = () => {
+                lootCount++;
+                document.getElementById('loot-count').textContent = lootCount;
+                alert("You opened a loot box! You got... a Common Item. Buy more for a chance at Legendary!");
+            };
+            document.getElementById('buy-battlepass').onclick = () => {
+                alert("Battle Pass purchased! Enjoy infinite tiers and endless grinding.");
+            };
+            document.getElementById('buy-gems').onclick = () => {
+                alert("Thank you for your purchase! (Your wallet cries in the distance.)");
+            };
+        });
+
+        launchAppButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            corporateModal.classList.add('fade-out');
+            setTimeout(() => {
+                corporateModal.classList.add('hidden');
+                showLobbyModal();
+            }, 500);
+        });
+
+        function startMockDownload() {
+            let progress = 0;
+            const totalSteps = 100;
+            const intervalTime = 30; // Milliseconds per step
+
+            const downloadInterval = setInterval(() => {
+                progress += 1;
+                downloadProgressBar.style.width = `${progress}%`;
+                if (progress <= 30) {
+                    downloadStatus.textContent = `Downloading game assets... (${progress}%)`;
+                } else if (progress <= 70) {
+                    downloadStatus.textContent = `Optimizing game files... (${progress}%)`;
+                } else if (progress < 100) {
+                    downloadStatus.textContent = `Finalizing installation... (${progress}%)`;
+                } else {
+                    clearInterval(downloadInterval);
+                    downloadStatus.textContent = 'Download Complete! Launching game...';
+                    setTimeout(() => {
+                        downloadModal.classList.add('fade-out');
+                        setTimeout(() => {
+                            downloadModal.classList.add('hidden');
+                            corporateModal.classList.remove('hidden');
+                            corporateModal.classList.add('modal-overlay'); // Ensure it's visible
+                        }, 500); // Wait for fade-out
+                    }, 1000); // Show "Complete" for a moment
+                }
+            }, intervalTime);
+        }
+    </script>
+</body>
+</html>
